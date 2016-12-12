@@ -1,6 +1,6 @@
 # talentAdapter
 
-定义了一个通用的RecyclerView.Adapter, 省去了每次使用RecyclerView，都要重定义一个RecyclerView.Adapter的麻烦。
+定义了一个通用Adapter，按数据类型绑定holder，名唤talentAdapter, 省去了每次使用RecyclerView，都要重定义一个RecyclerView.Adapter的麻烦。
 代码量很少，有兴趣的同学可以自行修改。
 
 使用方式很优雅，就两点：
