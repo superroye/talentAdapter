@@ -9,7 +9,10 @@
   TalentAdapter adapter = new TalentAdapter();
   adapter.addHolderType(MyHolder.class);
   组件会根据MyHolder绑定的数据类型泛型找到对应的holder，注意不要重复。
-  
+3 增加了简单的注解支持。  
+  HolderRes(R.layout.item)资源id直接绑定holder。
+  AutoView 可以让你省去findById的时间。
+ 
  DEMO如下：
  
  public class MainActivity extends AppCompatActivity {
@@ -36,18 +39,14 @@
         adapter.resetItems(list);
     }
 
-    @HolderRes(R.layout.item)
+     @HolderRes(R.layout.item)
     public static class MyHolder extends TalentHolder<String> {
 
+        @AutoView
         TextView text;
 
         public MyHolder(View itemView) {
             super(itemView);
-        }
-
-        @Override
-        public void initView() {
-            text = (TextView) itemView.findViewById(R.id.text);
         }
 
         @Override
@@ -60,6 +59,7 @@
     @HolderRes(R.layout.item1)
     public static class MyHolder1 extends TalentHolder<HashMap> {
 
+        @AutoView
         TextView text;
 
         public MyHolder1(View itemView) {
@@ -67,14 +67,9 @@
         }
 
         @Override
-        public void initView() {
-            text = (TextView) itemView.findViewById(R.id.text);
-        }
-
-        @Override
         public void toView() {
             text.setTextColor(new Random().nextInt(0x00ffffff) | 0xff000000);
-            text.setText("445556566");
+            text.setText("9999999999");
         }
     }
 }
