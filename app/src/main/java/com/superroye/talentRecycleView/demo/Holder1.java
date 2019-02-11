@@ -12,7 +12,7 @@ import com.superroye.talentrecyclerview.TalentHolder;
  * @date 2019/2/11
  */
 @HolderRes(R.layout.item_1)
-public class Holder1 extends TalentHolder<Item1> {
+public class Holder1 extends TalentHolder<Item1<String>> {
     public Holder1(View itemView) {
         super(itemView);
     }
@@ -22,6 +22,6 @@ public class Holder1 extends TalentHolder<Item1> {
 
     @Override
     public void toView() {
-        textView.setText("Holder1 "+itemValue.text);
+        textView.setText("Holder3 "+itemValue.text);
     }
 }

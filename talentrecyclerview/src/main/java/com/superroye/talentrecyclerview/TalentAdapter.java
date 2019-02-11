@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -132,7 +133,13 @@ public class TalentAdapter extends RecyclerView.Adapter {
     private Class getDataTypeClass(Class holderClass) {
         Class cls = null;
         try {
-            cls = (Class) (((ParameterizedType) holderClass.getGenericSuperclass()).getActualTypeArguments()[0]);
+            ParameterizedType pt = ((ParameterizedType) holderClass.getGenericSuperclass());
+            Type type = pt.getActualTypeArguments()[0];
+            if (type instanceof ParameterizedType) {
+                cls = (Class) ((ParameterizedType) type).getRawType();
+            } else {
+                cls = (Class) (type);
+            }
         } catch (Throwable e) {
             e.printStackTrace();
         }

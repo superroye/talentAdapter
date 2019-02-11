@@ -1,12 +1,12 @@
 package com.superroye.talentRecycleView.demo;
 
-import java.io.Serializable;
+import java.util.ArrayList;
 
 /**
  * @author Roye
  * @date 2019/2/11
  */
-public class Item1 implements Serializable {
+public class Item1<T> extends ArrayList<T> {
 
     public String text;
 
