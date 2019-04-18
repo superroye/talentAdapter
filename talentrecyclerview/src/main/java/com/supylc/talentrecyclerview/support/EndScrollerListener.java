@@ -1,4 +1,4 @@
-package com.supylc.talentrecyclerview;
+package com.supylc.talentrecyclerview.support;
 
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -10,9 +10,9 @@ import android.support.v7.widget.RecyclerView;
 public class EndScrollerListener extends RecyclerView.OnScrollListener {
 
     private int minLeftItemCount = 1;//剩余多少条时开始加载更多
-    private ILoadMore loadMore;
+    private LoadMore loadMore;
 
-    public EndScrollerListener(ILoadMore loadMore) {
+    public EndScrollerListener(LoadMore loadMore) {
         this.loadMore = loadMore;
     }
 

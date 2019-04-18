@@ -1,6 +1,9 @@
-package com.supylc.talentrecyclerview;
+package com.supylc.talentrecyclerview.support;
 
 import android.view.View;
+
+import com.supylc.talentrecyclerview.HolderRes;
+import com.supylc.talentrecyclerview.TalentHolder;
 
 /**
  * @author Roye

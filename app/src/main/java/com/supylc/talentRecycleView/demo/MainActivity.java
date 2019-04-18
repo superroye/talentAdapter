@@ -5,8 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 
-import com.supylc.talentrecyclerview.EndScrollerListener;
-import com.supylc.talentrecyclerview.ILoadMore;
+import com.supylc.talentrecyclerview.support.LoadMore;
 import com.supylc.talentrecyclerview.TalentAdapter;
 
 import java.util.ArrayList;
@@ -35,11 +34,22 @@ public class MainActivity extends AppCompatActivity {
 
         listRv.setAdapter(adapter);
 
-        adapter.getLoadMoreSupport().setLoadMore(listRv, new ILoadMore() {
+        adapter.getLoadMoreSupport().setLoadMore(listRv, new LoadMore() {
+
+            @Override
+            public int loadMode() {
+                return LoadMore.MODE_CLICK;
+            }
 
             @Override
             public void onLoadMore() {
-                loadData();
+                count++;
+                loadDataPage();
+            }
+
+            @Override
+            public boolean hasNext() {
+                return count < 5;
             }
         });
 
@@ -50,11 +60,10 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
-        loadData();
+        loadDataPage();
     }
 
-    void loadData() {
+    void loadDataPage() {
         List list = new ArrayList<>();
         list.add(new Item1("Item"));
         list.add(new MultiItem2(MultiItem2.TYPE_1, "Item"));
@@ -70,10 +79,6 @@ public class MainActivity extends AppCompatActivity {
         list.add(new MultiItem2(MultiItem2.TYPE_2, "Item2"));
         list.add(new MultiItem2(MultiItem2.TYPE_3, "Item3"));
 
-        adapter.resetItems(list);
-
-        if (count++ > 5) {
-            adapter.getLoadMoreSupport().onEndPage();
-        }
+        adapter.addPageItems(list);
     }
 }

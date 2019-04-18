@@ -7,6 +7,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.supylc.talentrecyclerview.support.LoadMoreSupport;
+import com.supylc.talentrecyclerview.support.Publisher;
+
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
@@ -25,14 +28,14 @@ public class TalentAdapter extends RecyclerView.Adapter {
 
     private SparseArray<Class> holderClassesMap = new SparseArray<>();
 
-    //viewType 划分：高8位公共空间，footer,header之类的；中16位数据类型，低8位为数据类型的二级类型
+    //viewType 划分：高24位为数据类型，低8位为数据类型的二级类型
     private final int LOW_TYPE_SIZE = 0x000F;
 
     private List<Class> dataClasses = new ArrayList<>(); //原则上超过255种数据类型就会出bug
     private LayoutInflater inflater;
     private OnItemClickListener onItemClickListener;
 
-    TalentSupport talentSupport;
+    private TalentSupport talentSupport;
 
     public TalentAdapter() {
         this(null);
@@ -85,11 +88,18 @@ public class TalentAdapter extends RecyclerView.Adapter {
     }
 
     public void insertItems(List items, int position) {
-        if (mItems != null && position > -1 && mItems.size() >= position) {
-            int start = mItems.size();
-            mItems.addAll(position, items);
-            notifyItemRangeInserted(start, items.size());
+        if (items != null) {
+            if (mItems != null && position > -1 && mItems.size() >= position) {
+                int start = mItems.size();
+                mItems.addAll(position, items);
+                notifyItemRangeInserted(start, items.size());
+            }
         }
+    }
+
+    public void addPageItems(List items) {
+        addItems(items);
+        talentSupport.getLoadMoreSupport().onLoadMoreFinish();
     }
 
     public Object getItem(int position) {
@@ -123,7 +133,6 @@ public class TalentAdapter extends RecyclerView.Adapter {
                 holderResId = parent.getResources().getIdentifier(holderRes.resName(), "layout", parent.getContext().getPackageName());
             }
             View root = inflater.inflate(holderResId, parent, false);
-
             holder = holderClass.getConstructor(View.class).newInstance(root);
         } catch (InstantiationException e) {
             e.printStackTrace();
@@ -183,11 +192,6 @@ public class TalentAdapter extends RecyclerView.Adapter {
         return cls;
     }
 
-    @Deprecated
-    public void addHolderType(Class<? extends TalentHolder> holderClass) {
-        registerHolder(holderClass);
-    }
-
     public void registerHolder(Class<? extends TalentHolder> holderClass) {
         registerHolder(holderClass, 0);
     }
@@ -218,18 +222,22 @@ public class TalentAdapter extends RecyclerView.Adapter {
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        ((TalentHolder) holder).bind(getItem(position));
-        ((TalentHolder) holder).setOnItemClick(onItemClickListener);
+        TalentHolder mHolder = ((TalentHolder) holder);
+        mHolder.bind(getItem(position));
+        mHolder.setOnItemClick(onItemClickListener);
+        mHolder.setPublisher(publisher());
     }
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position, List payloads) {
+        TalentHolder mHolder = ((TalentHolder) holder);
         if (payloads.isEmpty()) {
-            ((TalentHolder) holder).bind(getItem(position));
-            ((TalentHolder) holder).setOnItemClick(onItemClickListener);
+            mHolder.bind(getItem(position));
+            mHolder.setOnItemClick(onItemClickListener);
         } else {
-            ((TalentHolder) holder).onPayload(payloads.get(0));
+            mHolder.onPayload(payloads.get(0));
         }
+        mHolder.setPublisher(publisher());
     }
 
     @Override
@@ -246,6 +254,10 @@ public class TalentAdapter extends RecyclerView.Adapter {
         if (holder instanceof TalentHolder) {
             ((TalentHolder) holder).recycle();
         }
+    }
+
+    public Publisher publisher() {
+        return talentSupport.getPublisher();
     }
 
     public LoadMoreSupport getLoadMoreSupport() {

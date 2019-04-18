@@ -1,5 +1,12 @@
 package com.supylc.talentrecyclerview;
 
+import com.supylc.talentrecyclerview.support.LoadMoreBean;
+import com.supylc.talentrecyclerview.support.LoadMoreHolder;
+import com.supylc.talentrecyclerview.support.LoadMoreSupport;
+import com.supylc.talentrecyclerview.support.NullHolder;
+import com.supylc.talentrecyclerview.support.NullObject;
+import com.supylc.talentrecyclerview.support.Publisher;
+
 /**
  * @author Roye
  * @date 2019/4/17
@@ -7,16 +14,16 @@ package com.supylc.talentrecyclerview;
 public class TalentSupport {
 
     private NullObject nullObject;
-    private TalentLoadmore talentLoadmore;
     private LoadMoreSupport loadMoreSupport;
+    private Publisher publisher;
 
     public TalentSupport(TalentAdapter talentAdapter) {
         this.nullObject = new NullObject();
-        this.talentLoadmore = new TalentLoadmore();
         talentAdapter.registerHolder(NullHolder.class);
-        talentAdapter.registerHolder(LoadmoreHolder.class);
+        talentAdapter.registerHolder(LoadMoreHolder.class);
 
         loadMoreSupport = new LoadMoreSupport(talentAdapter);
+        publisher = new Publisher();
     }
 
     public LoadMoreSupport getLoadMoreSupport() {
@@ -27,9 +34,11 @@ public class TalentSupport {
         return nullObject;
     }
 
-    public TalentLoadmore getTalentLoadmore() {
-        return talentLoadmore;
+    public LoadMoreBean getTalentLoadmore() {
+        return loadMoreSupport.getTalentLoadmore();
     }
 
-
+    public Publisher getPublisher() {
+        return publisher;
+    }
 }

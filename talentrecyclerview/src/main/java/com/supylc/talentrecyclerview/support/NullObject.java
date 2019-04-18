@@ -1,4 +1,4 @@
-package com.supylc.talentrecyclerview;
+package com.supylc.talentrecyclerview.support;
 
 import java.io.Serializable;
 

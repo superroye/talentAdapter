@@ -5,7 +5,9 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 
+import com.supylc.talentrecyclerview.support.Publisher;
 import com.supylc.talentrecyclerview.tools.LifecycleUtils;
+
 import java.lang.reflect.Field;
 
 /**
@@ -15,6 +17,7 @@ public abstract class TalentHolder<T> extends RecyclerView.ViewHolder {
 
     String TAG = TalentHolder.class.getSimpleName();
 
+    private Publisher publisher;
     public T itemValue;
     public OnItemClickListener mItemClickListener;
 
@@ -60,6 +63,7 @@ public abstract class TalentHolder<T> extends RecyclerView.ViewHolder {
         if (listener == null || itemView.hasOnClickListeners()) {//不覆盖item的原来click事件
             return;
         }
+
         itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -67,6 +71,16 @@ public abstract class TalentHolder<T> extends RecyclerView.ViewHolder {
                 mItemClickListener.onItemClickListener(v, holderInfo);
             }
         });
+    }
+
+    protected void setPublisher(Publisher publisher) {
+        this.publisher = publisher;
+    }
+
+    public void post(Object value) {
+        if (publisher != null) {
+            publisher.postValue(this.getClass(), itemValue, value);
+        }
     }
 
     //局部刷新
