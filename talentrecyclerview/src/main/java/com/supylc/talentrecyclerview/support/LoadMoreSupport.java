@@ -1,5 +1,7 @@
 package com.supylc.talentrecyclerview.support;
 
+import android.content.Context;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
 import com.supylc.talentrecyclerview.TalentAdapter;
@@ -13,12 +15,12 @@ public class LoadMoreSupport implements LoadMore {
     private LoadMore loadMoreDelegate;
     private EndScrollerListener endScrollerListener;
     private RecyclerView recyclerView;
-    private TalentAdapter talentAdapter;
+    private TalentAdapter adapter;
     private LoadMoreBean talentLoadmore;
     private Subscriber clickObserver;
 
     public LoadMoreSupport(TalentAdapter talentAdapter) {
-        this.talentAdapter = talentAdapter;
+        this.adapter = talentAdapter;
         this.talentLoadmore = new LoadMoreBean();
     }
 
@@ -41,7 +43,7 @@ public class LoadMoreSupport implements LoadMore {
                     }
                 }
             };
-            talentAdapter.publisher().subscribe(clickObserver);
+            adapter.publisher().subscribe(clickObserver);
         }
         refreshLoadmore(LoadMoreBean.STATUS_READY);
     }
@@ -82,21 +84,34 @@ public class LoadMoreSupport implements LoadMore {
     }
 
     private void onEndPage() {
-        if (LoadMore.MODE_AUTO == loadMode()) {
-            if (recyclerView != null && endScrollerListener != null) {
-                recyclerView.removeOnScrollListener(endScrollerListener);
-            }
-        } else if (LoadMore.MODE_CLICK == loadMode()) {
-            talentAdapter.publisher().deleteObserver(clickObserver);
-        }
         refreshLoadmore(LoadMoreBean.STATUS_END);
     }
 
-    private void refreshLoadmore(int status) {
-        if (talentAdapter != null) {
-            int loadMorePosition = talentAdapter.getItemCount() - 1;
+    public synchronized void resetLoadmoreStatus() {
+        if (hasNext()) {
+            talentLoadmore.setStatus(LoadMoreBean.STATUS_READY);
+        }
+    }
+
+    private synchronized void refreshLoadmore(int status) {
+        if (adapter != null) {
+            int loadMorePosition = adapter.getItemCount() - 1;
             talentLoadmore.setStatus(status);
-            talentAdapter.notifyItemChanged(loadMorePosition);
+            adapter.notifyItemChanged(loadMorePosition, "");
+        }
+    }
+
+    public void onItemsChange() {
+        if (recyclerView != null && recyclerView.getLayoutManager() instanceof LinearLayoutManager) {
+            recyclerView.post(new Runnable() {
+                @Override
+                public void run() {
+                    LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
+                    if (layoutManager.findLastCompletelyVisibleItemPosition() == adapter.getItemCount() - 1) {
+                        onLoadMore();
+                    }
+                }
+            });
         }
     }
 }

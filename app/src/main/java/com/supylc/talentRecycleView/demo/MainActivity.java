@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public int loadMode() {
-                return LoadMore.MODE_CLICK;
+                return LoadMore.MODE_AUTO;
             }
 
             @Override
@@ -66,18 +66,18 @@ public class MainActivity extends AppCompatActivity {
     void loadDataPage() {
         List list = new ArrayList<>();
         list.add(new Item1("Item"));
-        list.add(new MultiItem2(MultiItem2.TYPE_1, "Item"));
-        list.add(new Item1("Item"));
-        list.add(new MultiItem2(MultiItem2.TYPE_2, "Item"));
-        list.add(new Item1("Item"));
-        list.add(new MultiItem2(MultiItem2.TYPE_2, "Item2"));
-        list.add(new MultiItem2(MultiItem2.TYPE_3, "Item3"));
+//        list.add(new MultiItem2(MultiItem2.TYPE_1, "Item"));
+//        list.add(new Item1("Item"));
+//        list.add(new MultiItem2(MultiItem2.TYPE_2, "Item"));
+//        list.add(new Item1("Item"));
+//        list.add(new MultiItem2(MultiItem2.TYPE_2, "Item2"));
+//        list.add(new MultiItem2(MultiItem2.TYPE_3, "Item3"));
         list.add(null);
         list.add(new MultiItem2(MultiItem2.TYPE_3, "Item3"));
-        list.add(new MultiItem2(MultiItem2.TYPE_2, "Item2"));
-        list.add(new MultiItem2(MultiItem2.TYPE_3, "Item3"));
-        list.add(new MultiItem2(MultiItem2.TYPE_2, "Item2"));
-        list.add(new MultiItem2(MultiItem2.TYPE_3, "Item3"));
+//        list.add(new MultiItem2(MultiItem2.TYPE_2, "Item2"));
+//        list.add(new MultiItem2(MultiItem2.TYPE_3, "Item3"));
+//        list.add(new MultiItem2(MultiItem2.TYPE_2, "Item2"));
+//        list.add(new MultiItem2(MultiItem2.TYPE_3, "Item3"));
 
         adapter.addPageItems(list);
     }

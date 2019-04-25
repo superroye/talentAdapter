@@ -1,5 +1,7 @@
 package com.supylc.talentrecyclerview;
 
+import android.support.v7.widget.RecyclerView;
+
 import com.supylc.talentrecyclerview.support.LoadMoreBean;
 import com.supylc.talentrecyclerview.support.LoadMoreHolder;
 import com.supylc.talentrecyclerview.support.LoadMoreSupport;
@@ -24,6 +26,37 @@ public class TalentSupport {
 
         loadMoreSupport = new LoadMoreSupport(talentAdapter);
         publisher = new Publisher();
+        talentAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
+            @Override
+            public void onChanged() {
+                loadMoreSupport.onItemsChange();
+            }
+
+            @Override
+            public void onItemRangeChanged(int positionStart, int itemCount) {
+                loadMoreSupport.onItemsChange();
+            }
+
+            @Override
+            public void onItemRangeInserted(int positionStart, int itemCount) {
+                loadMoreSupport.onItemsChange();
+            }
+
+            @Override
+            public void onItemRangeMoved(int fromPosition, int toPosition, int itemCount) {
+                loadMoreSupport.onItemsChange();
+            }
+
+            @Override
+            public void onItemRangeRemoved(int positionStart, int itemCount) {
+                loadMoreSupport.onItemsChange();
+            }
+
+            @Override
+            public void onItemRangeChanged(int positionStart, int itemCount, Object payload) {
+                loadMoreSupport.onItemsChange();
+            }
+        });
     }
 
     public LoadMoreSupport getLoadMoreSupport() {

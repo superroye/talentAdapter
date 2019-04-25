@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.supylc.talentrecyclerview.support.LoadMoreBean;
 import com.supylc.talentrecyclerview.support.LoadMoreSupport;
 import com.supylc.talentrecyclerview.support.Publisher;
 
@@ -57,6 +58,7 @@ public class TalentAdapter extends RecyclerView.Adapter {
     }
 
     public void resetItems(List items, boolean notify) {
+        getLoadMoreSupport().resetLoadmoreStatus();
         if (items != null) {
             mItems = items;
             if (notify) {
@@ -69,6 +71,15 @@ public class TalentAdapter extends RecyclerView.Adapter {
         if (mItems != null && mItems.size() > position) {
             mItems.remove(position);
             notifyItemRemoved(position);
+        }
+    }
+
+    public void removeItems(int position, int itemCount) {
+        if (mItems != null && mItems.size() > position) {
+            for (int i = 0; i < itemCount; i++) {
+                mItems.remove(position);
+            }
+            notifyItemRangeRemoved(position, itemCount);
         }
     }
 
@@ -90,9 +101,8 @@ public class TalentAdapter extends RecyclerView.Adapter {
     public void insertItems(List items, int position) {
         if (items != null) {
             if (mItems != null && position > -1 && mItems.size() >= position) {
-                int start = mItems.size();
                 mItems.addAll(position, items);
-                notifyItemRangeInserted(start, items.size());
+                notifyItemRangeInserted(position, items.size());
             }
         }
     }
