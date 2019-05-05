@@ -59,11 +59,15 @@ public class LoadMoreSupport implements LoadMore {
 
     @Override
     public void onLoadMore() {
-        if (LoadMoreBean.STATUS_READY != talentLoadmore.getStatus()) {
+        if (adapter.getItemCount() <= 1) {
             return;
         }
-        refreshLoadmore(LoadMoreBean.STATUS_LOADING);
-        loadMoreDelegate.onLoadMore();
+        if (hasNext()) {
+            refreshLoadmore(LoadMoreBean.STATUS_LOADING);
+            loadMoreDelegate.onLoadMore();
+        } else {
+            onEndPage();
+        }
     }
 
     @Override
@@ -95,9 +99,13 @@ public class LoadMoreSupport implements LoadMore {
 
     private synchronized void refreshLoadmore(int status) {
         if (adapter != null) {
-            int loadMorePosition = adapter.getItemCount() - 1;
             talentLoadmore.setStatus(status);
-            adapter.notifyItemChanged(loadMorePosition, "");
+            recyclerView.post(new Runnable() {
+                @Override
+                public void run() {
+                    adapter.notifyItemChanged(adapter.getItemCount() - 1);
+                }
+            });
         }
     }
 

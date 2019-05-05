@@ -7,7 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.supylc.talentrecyclerview.support.LoadMoreBean;
 import com.supylc.talentrecyclerview.support.LoadMoreSupport;
 import com.supylc.talentrecyclerview.support.Publisher;
 
@@ -58,12 +57,17 @@ public class TalentAdapter extends RecyclerView.Adapter {
     }
 
     public void resetItems(List items, boolean notify) {
-        getLoadMoreSupport().resetLoadmoreStatus();
+        if (talentSupport.getLoadMoreSupport().isNeedLoadmore()) {
+            getLoadMoreSupport().resetLoadmoreStatus();
+        }
         if (items != null) {
             mItems = items;
             if (notify) {
                 notifyDataSetChanged();
             }
+        }
+        if (talentSupport.getLoadMoreSupport().isNeedLoadmore()) {
+            talentSupport.getLoadMoreSupport().onLoadMoreFinish();
         }
     }
 
